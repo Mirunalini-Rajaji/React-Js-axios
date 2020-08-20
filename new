@@ -1,0 +1,95 @@
+import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import updateProductBroadCast from '../actions/updateProductBroadCast';
+
+class EditProduct extends React.Component {
+    constructor(props){
+        super(props)
+        // let product = this.props.allProducts.filter(pr=>{
+        //     return pr.id ===parseInt(this.props.match.params.id)
+        // })
+        this.state={
+            
+            name:'',
+            price:0,
+            quantity:0,
+            category:'',
+            edit:[]
+            
+        }
+    }
+    componentWillMount(){
+        this.setState({edit:this.props.editProducts})
+    }
+    
+    getName=(event)=>{
+        this.setState({name:event.target.value})
+    }
+    getPrice=(event)=>{
+        this.setState({price:event.target.value})
+    }
+    getQuantity=(event)=>{
+        this.setState({quantity:event.target.value})
+    }
+    getCategory=(event)=>{
+        this.setState({category:event.target.value})
+    }
+    edit=(e)=>{
+        // console.log(this.state.edit)
+        e.preventDefault();
+        let products={
+    name:this.state.name,
+    price:this.state.price,
+    quantity:this.state.quantity,
+    category:this.state.category
+}
+// if(this.props.allproducts.find(e=>{
+//     return e.id===this.props.editProducts.id
+// })){
+console.log(products)
+this.props.setEditProducts(products)
+// }
+    }
+    render() { 
+        if(this.props.editProducts === null){
+            return (
+                <div>
+                    <h2>Product Not Available!!</h2>
+                </div>
+            )
+        }else{
+        return ( 
+            <div>
+                <center>
+                <form>
+                    <fieldset>
+                        <h2>Edit Product</h2>
+                        {/* Id :<input type="text" value={this.props.editProducts.id} ></input><br></br> */}
+                        Name :<input type="text"  onChange={this.getName} value={this.state.edit.name}></input><br></br>
+                        Price :<input type="number" value={this.props.editProducts.price} onChange={this.getPrice}></input><br></br>
+                        Quantity:<input type="number" value={this.props.editProducts.quantity} onChange={this.getQuantity}></input><br></br>
+                        Category:<input type="text" value={this.props.editProducts.category} onChange={this.getCategory}></input><br></br>
+                        <button onClick={this.edit}>Update</button>
+                    </fieldset>
+                </form>
+                </center>
+            </div>
+         );
+    }
+}
+}
+function actionDispatch(dispatch){
+    console.log("dispatch")
+    return bindActionCreators({
+        setEditProducts:updateProductBroadCast
+    },dispatch)
+}
+function convertToStore(store){
+    return{
+        editProducts:store.editProducts,
+        allProducts:store.allProducts
+    }
+}
+ 
+export default connect(convertToStore,actionDispatch)(EditProduct);
